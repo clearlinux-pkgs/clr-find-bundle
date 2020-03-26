@@ -4,14 +4,14 @@
 #
 Name     : clr-find-bundle
 Version  : 1.0.2
-Release  : 2
+Release  : 3
 URL      : https://github.com/aselker/clr-find-bundle/archive/v1.0.2.tar.gz
 Source0  : https://github.com/aselker/clr-find-bundle/archive/v1.0.2.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0
-Requires: clr-find-bundle-bin
-Requires: clr-find-bundle-license
+Requires: clr-find-bundle-bin = %{version}-%{release}
+Requires: clr-find-bundle-license = %{version}-%{release}
 
 %description
 No detailed description available
@@ -19,7 +19,7 @@ No detailed description available
 %package bin
 Summary: bin components for the clr-find-bundle package.
 Group: Binaries
-Requires: clr-find-bundle-license
+Requires: clr-find-bundle-license = %{version}-%{release}
 
 %description bin
 bin components for the clr-find-bundle package.
@@ -35,20 +35,30 @@ license components for the clr-find-bundle package.
 
 %prep
 %setup -q -n clr-find-bundle-1.0.2
+cd %{_builddir}/clr-find-bundle-1.0.2
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1534961264
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1585183929
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 make  %{?_smp_mflags}
 
+
 %install
-export SOURCE_DATE_EPOCH=1534961264
+export SOURCE_DATE_EPOCH=1585183929
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/clr-find-bundle
-cp LICENSE %{buildroot}/usr/share/doc/clr-find-bundle/LICENSE
+mkdir -p %{buildroot}/usr/share/package-licenses/clr-find-bundle
+cp %{_builddir}/clr-find-bundle-1.0.2/LICENSE %{buildroot}/usr/share/package-licenses/clr-find-bundle/7df059597099bb7dcf25d2a9aedfaf4465f72d8d
 %make_install
 
 %files
@@ -59,5 +69,5 @@ cp LICENSE %{buildroot}/usr/share/doc/clr-find-bundle/LICENSE
 /usr/bin/find-bundle.sh
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/clr-find-bundle/LICENSE
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/clr-find-bundle/7df059597099bb7dcf25d2a9aedfaf4465f72d8d
